@@ -1,4 +1,4 @@
-package com.github.thoyer.happy;
+package com.github.throyer.happy;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

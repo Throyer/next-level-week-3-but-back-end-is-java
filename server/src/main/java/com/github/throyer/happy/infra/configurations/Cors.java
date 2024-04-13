@@ -1,4 +1,4 @@
-package com.github.thoyer.happy.configurations;
+package com.github.throyer.happy.infra.configurations;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
