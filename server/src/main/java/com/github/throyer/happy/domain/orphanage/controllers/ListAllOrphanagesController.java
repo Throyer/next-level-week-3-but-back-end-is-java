@@ -1,7 +1,7 @@
 package com.github.throyer.happy.domain.orphanage.controllers;
 
-import com.github.throyer.happy.domain.orphanage.models.Orphanage;
-import com.github.throyer.happy.domain.orphanage.repositories.OrphanageRepository;
+import com.github.throyer.happy.domain.orphanage.dtos.OrphanageInfo;
+import com.github.throyer.happy.domain.orphanage.services.FindAllOrphanagesService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +13,10 @@ import java.util.List;
 @RequestMapping("/orphanages")
 @AllArgsConstructor
 public class ListAllOrphanagesController {
-  private final OrphanageRepository repository;
+  private final FindAllOrphanagesService service;
   
   @GetMapping
-  public List<Orphanage> index() {
-    return repository.findAll();
+  public List<OrphanageInfo> index() {
+    return service.findAll();
   }
 }

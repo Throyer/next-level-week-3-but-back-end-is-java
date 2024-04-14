@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.beans.ConstructorProperties;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,8 +33,10 @@ public class Orphanage {
   @Field(name = "open_on_weekends")
   @JsonProperty("open_on_weekends")
   private Boolean openOnWeekends = false;
+  
+  private List<Image> images;
 
-  public Orphanage(CreateOrphanageData data) {
+  public Orphanage(CreateOrphanageData data, List<Image> images) {
     this.name = data.getName();
     this.latitude = data.getLatitude();
     this.longitude = data.getLongitude();
@@ -41,5 +44,6 @@ public class Orphanage {
     this.instructions = data.getInstructions();
     this.openingHours = data.getOpening_hours();
     this.openOnWeekends = data.getOpen_on_weekends();
+    this.images = images;
   }
 }

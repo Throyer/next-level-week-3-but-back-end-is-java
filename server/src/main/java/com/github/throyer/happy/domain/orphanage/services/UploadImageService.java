@@ -1,4 +1,4 @@
-package com.github.throyer.happy.domain.image.services;
+package com.github.throyer.happy.domain.orphanage.services;
 
 import com.github.throyer.happy.infra.envs.SftpAuthProperties;
 import lombok.AllArgsConstructor;
