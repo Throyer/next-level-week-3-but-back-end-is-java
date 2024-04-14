@@ -14,7 +14,7 @@ services:
         - ./configurations/mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
         - ~/.volumes/happy/database/mongodb:/data/db
 
-    http:
+    nginx:
       container_name: http
       image: nginx:latest
       environment:
@@ -28,8 +28,43 @@ services:
     sftp:
       image: atmoz/sftp
       container_name: sftp
-      ports:
-        - "2222:22"
+      expose:
+        - 22
       command: foo:pass:1001:100:/data
       volumes:
         - ./.volumes/images:/home/foo/data
+
+    server:
+      container_name: happy-api
+      image: throyer/happy-api-dev:latest
+      build:
+        context: ./
+        dockerfile: Dockerfile.dev
+      depends_on:
+        - database
+        - sftp
+      ports:
+        - "8080:8080"
+        - "8181:8181"
+      tty: true
+      environment:
+        TZ: "${TIMEZONE}"
+        LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_MONGODB_CORE_MONGOTEMPLATE: "INFO"
+        DB_URI: "mongodb://root:root@database:27017/happy"
+        SFTP_HOST: "sftp"
+        SFTP_PORT: "22"
+        IMAGE_SERVER_HOST: http://localhost:8000
+      volumes:
+        - ../server:/app
+        - ~/.volumes/happy/.m2:/root/.m2
+      working_dir: /app
+      entrypoint: [
+        'dockerize',
+        '-wait',
+        'tcp://database:${DB_PORT}',
+        '-timeout',
+        '20s',
+        'mvn',
+        'spring-boot:run',
+        '-Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,address=*:8181,suspend=n"'
+      ]

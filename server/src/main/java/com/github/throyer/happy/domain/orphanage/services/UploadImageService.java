@@ -1,11 +1,13 @@
 package com.github.throyer.happy.domain.orphanage.services;
 
+import com.github.throyer.happy.domain.orphanage.models.File;
 import com.github.throyer.happy.infra.envs.SftpAuthProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
@@ -24,13 +26,13 @@ public class UploadImageService {
   private final SftpAuthProperties properties;
   private final JSch jsch = new JSch();
   
-  public void upload(byte[] bytes, String filename) {
+  public void upload(List<File> files) {
     Session session = null;
     Channel channel = null;
     ChannelSftp channelSftp = null;
 
     try {
-      log.info("iniciando acesso SFTP para o upload de: {}", filename);
+      log.info("iniciando acesso SFTP para o upload de: {}", String.join(", ", files.stream().map(File::getFilename).toList()));
 
       var username = properties.getUsername();
       var host = properties.getHost();
@@ -64,8 +66,9 @@ public class UploadImageService {
       log.info("entrando no diretorio: '{}'", dir);
       channelSftp.cd(dir);
 
-      channelSftp.put(new ByteArrayInputStream(bytes), filename);
-      log.info("arquivo {} transferido com sucesso", filename);
+      for (File file : files){
+        write(file, channelSftp);
+      }
 
     } catch (JSchException | SftpException exception) {
       throw new RuntimeException(exception);
@@ -89,5 +92,10 @@ public class UploadImageService {
           connected.disconnect();
         });
     }
+  }
+  
+  public void write(File file, ChannelSftp sftp) throws SftpException {
+    sftp.put(new ByteArrayInputStream(file.getBytes()), file.getFilename());
+    log.info("arquivo {} transferido com sucesso", file.getFilename());
   }
 }
