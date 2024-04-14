@@ -1,6 +1,7 @@
 package com.github.throyer.happy.domain.orphanage.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.throyer.happy.domain.orphanage.dtos.CreateOrphanageData;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -9,31 +10,21 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.beans.ConstructorProperties;
 import java.math.BigDecimal;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Document("orphanages")
+@Document("orphanage")
 public class Orphanage {
   private String id;
-  
-  @NotBlank
   private String name;
-  
-  @NotNull
   private BigDecimal latitude;
-  
-  @NotNull
   private BigDecimal longitude;
-  
-  @NotBlank
   private String about;
-
-  @NotBlank
   private String instructions;
-
-  @NotBlank
+  
   @Field(name = "opening_hours")
   @JsonProperty("opening_hours")
   private String openingHours;  
@@ -41,4 +32,14 @@ public class Orphanage {
   @Field(name = "open_on_weekends")
   @JsonProperty("open_on_weekends")
   private Boolean openOnWeekends = false;
+
+  public Orphanage(CreateOrphanageData data) {
+    this.name = data.getName();
+    this.latitude = data.getLatitude();
+    this.longitude = data.getLongitude();
+    this.about = data.getAbout();
+    this.instructions = data.getInstructions();
+    this.openingHours = data.getOpening_hours();
+    this.openOnWeekends = data.getOpen_on_weekends();
+  }
 }

@@ -13,3 +13,23 @@ services:
       volumes:
         - ./configurations/mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
         - ~/.volumes/happy/database/mongodb:/data/db
+
+    http:
+      container_name: http
+      image: nginx:latest
+      environment:
+        TZ: "${TIMEZONE}"
+      ports:
+        - "8000:80"
+      volumes:
+        - ./configurations/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+        - ./.volumes/images:/data/
+
+    sftp:
+      image: atmoz/sftp
+      container_name: sftp
+      ports:
+        - "2222:22"
+      command: foo:pass:1001:100:/data
+      volumes:
+        - ./.volumes/images:/home/foo/data
