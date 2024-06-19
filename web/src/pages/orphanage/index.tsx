@@ -13,6 +13,7 @@ import { markerIcon } from "../../utils/maps";
 import { Map } from "../../components/map";
 import { OrphanageInfo, orphanageById } from "../../services/orphanage";
 import { Button } from "../../components/button";
+import { OrphanagesMap } from '../orphanages-map';
 
 type OrphanageRouteParams = {
   orphanage_id?: string;
@@ -42,10 +43,13 @@ export const Orphanage = () => {
 
       <main>
         <div className="orphanage-details">
-          <img
-            src={orphanage.images[selectedImageIndex].url}
-            alt={orphanage.name}
-          />
+
+          {orphanage.images.length && (
+            <img
+              src={orphanage.images[selectedImageIndex].url}
+              alt={orphanage.name}
+            />
+          )}
 
           <div className="images">
             {orphanage.images.map((image, index) => {
