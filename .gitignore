@@ -3,3 +3,4 @@
 .docker/.volumes/images/*.jpg
 .docker/.volumes/images/*.jpeg
 .docker/.volumes/images/*.png
+.idea/
